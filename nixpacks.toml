@@ -1,5 +1,4 @@
-# Railway deployment config – inilah yang memastikan npm build berjalan
-# dan memperbaiki masalah "style tidak ter-load" saat di-deploy
+# Railway deployment config
 
 [phases.setup]
 nixPkgs = ["nodejs_20"]
@@ -22,4 +21,4 @@ cmds = [
 ]
 
 [start]
-cmd = "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+cmd = "php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=$PORT"
