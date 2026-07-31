@@ -40,27 +40,32 @@ Route::get('/mail-config', function () {
 
 Route::get('/smtp-debug', function () {
 
-    try {
+    $start = microtime(true);
 
-        Mail::raw('test', function ($m) {
-            $m->to('jhomada989@gmail.com')
-              ->subject('SMTP TEST');
-        });
+    $fp = @fsockopen(
+        "smtp.gmail.com",
+        587,
+        $errno,
+        $errstr,
+        10
+    );
 
-        return 'SUCCESS';
-
-    } catch (\Throwable $e) {
-
+    if (!$fp) {
         return response()->json([
-            'class' => get_class($e),
-            'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
+            'success' => false,
+            'errno' => $errno,
+            'errstr' => $errstr,
+            'elapsed' => microtime(true) - $start,
         ]);
-
     }
 
-});
+    fclose($fp);
 
+    return response()->json([
+        'success' => true,
+        'elapsed' => microtime(true) - $start,
+    ]);
+});
 
 Route::get('/socket-test', function () {
 
