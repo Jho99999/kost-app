@@ -32,10 +32,7 @@
                             Klik tombol di bawah ini untuk membuat password baru.
                         </p>
 
-                        @php
-                            $url = route('password.reset', $token)
-                                . '?email=' . urlencode($user->email);
-                        @endphp
+                        
 
                         <div style="text-align:center;margin:35px 0;">
 
