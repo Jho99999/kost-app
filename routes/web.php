@@ -37,6 +37,32 @@ Route::get('/mail-config', function () {
         'from' => config('mail.from.address'),
     ];
 });
+
+Route::get('/smtp-debug', function () {
+
+    try {
+
+        Mail::raw('test', function ($m) {
+            $m->to('jhomada989@gmail.com')
+              ->subject('SMTP TEST');
+        });
+
+        return 'SUCCESS';
+
+    } catch (\Throwable $e) {
+
+        return response()->json([
+            'class' => get_class($e),
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+    }
+
+});
+
+
+
 /* ── Guest only ─────────────────────────────────────────────── */
 Route::middleware('guest')->group(function () {
     Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
