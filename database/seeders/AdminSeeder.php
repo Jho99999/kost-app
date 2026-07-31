@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
         // Admin Default
         // ─────────────────────────────────────────────────────────
 
-        User::updateOrCreate(
+        User::firstOrCreate(
             ['email' => 'admin@kost.com'],
             [
                 'name'     => 'Administrator',
