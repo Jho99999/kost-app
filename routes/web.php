@@ -70,6 +70,38 @@ Route::get('/smtp-debug', function () {
     return response()->json($tests);
 });
 
+Route::get('/smtp-ports', function () {
+
+    $tests = [];
+
+    foreach ([25,465,587,2525] as $port) {
+
+        $start = microtime(true);
+
+        $fp = @fsockopen(
+            "smtp-relay.brevo.com",
+            $port,
+            $errno,
+            $errstr,
+            5
+        );
+
+        $tests[] = [
+            'port'=>$port,
+            'success'=>!!$fp,
+            'errno'=>$errno,
+            'errstr'=>$errstr,
+            'elapsed'=>round(microtime(true)-$start,2)
+        ];
+
+        if($fp){
+            fclose($fp);
+        }
+    }
+
+    return response()->json($tests);
+});
+
 Route::get('/socket-test', function () {
 
     $start = microtime(true);
