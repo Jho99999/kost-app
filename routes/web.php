@@ -16,6 +16,16 @@ use App\Http\Controllers\User\RoomController      as UserRoom;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 
+
+Route::get('/smtp-test', function () {
+
+    Mail::raw('SMTP TEST', function ($mail) {
+        $mail->to('emailanda@gmail.com')
+             ->subject('SMTP TEST');
+    });
+
+    return 'SUCCESS';
+});
 /* ── Guest only ─────────────────────────────────────────────── */
 Route::middleware('guest')->group(function () {
     Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
@@ -96,14 +106,6 @@ Route::middleware('auth')->group(function () {
         Route::get('checkouts/room/{room}/history',     [AdminCheckOut::class, 'roomHistory'])->name('checkouts.history');
     });
 
-    Route::get('/smtp-test', function () {
 
-        Mail::raw('SMTP TEST', function ($mail) {
-            $mail->to('emailanda@gmail.com')
-                ->subject('SMTP TEST');
-        });
-
-        return 'SUCCESS';
-    });
 
 });
