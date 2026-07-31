@@ -62,6 +62,38 @@ Route::get('/smtp-debug', function () {
 });
 
 
+Route::get('/socket-test', function () {
+
+    $start = microtime(true);
+
+    $errno = 0;
+    $errstr = '';
+
+    $fp = @fsockopen(
+        'smtp-relay.brevo.com',
+        587,
+        $errno,
+        $errstr,
+        10
+    );
+
+    if (!$fp) {
+        return response()->json([
+            'success' => false,
+            'errno' => $errno,
+            'errstr' => $errstr,
+            'elapsed' => microtime(true) - $start,
+        ]);
+    }
+
+    fclose($fp);
+
+    return response()->json([
+        'success' => true,
+        'elapsed' => microtime(true) - $start,
+    ]);
+});
+
 
 /* ── Guest only ─────────────────────────────────────────────── */
 Route::middleware('guest')->group(function () {
