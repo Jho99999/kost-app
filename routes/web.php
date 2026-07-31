@@ -14,6 +14,7 @@ use App\Http\Controllers\User\PaymentController   as UserPayment;
 use App\Http\Controllers\User\ProfileController  as UserProfile;
 use App\Http\Controllers\User\RoomController      as UserRoom;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
 /* ── Guest only ─────────────────────────────────────────────── */
 Route::middleware('guest')->group(function () {
@@ -94,4 +95,15 @@ Route::middleware('auth')->group(function () {
         Route::post('checkouts/{booking}/extend',       [AdminCheckOut::class, 'extend'])->name('checkouts.extend');
         Route::get('checkouts/room/{room}/history',     [AdminCheckOut::class, 'roomHistory'])->name('checkouts.history');
     });
+
+    Route::get('/smtp-test', function () {
+
+        Mail::raw('SMTP TEST', function ($mail) {
+            $mail->to('emailanda@gmail.com')
+                ->subject('SMTP TEST');
+        });
+
+        return 'SUCCESS';
+    });
+
 });
