@@ -26,6 +26,17 @@ Route::get('/smtp-test', function () {
 
     return 'SUCCESS';
 });
+
+Route::get('/mail-config', function () {
+    return [
+        'mailer' => config('mail.default'),
+        'host' => config('mail.mailers.smtp.host'),
+        'port' => config('mail.mailers.smtp.port'),
+        'username' => config('mail.mailers.smtp.username'),
+        'scheme' => config('mail.mailers.smtp.scheme'),
+        'from' => config('mail.from.address'),
+    ];
+});
 /* ── Guest only ─────────────────────────────────────────────── */
 Route::middleware('guest')->group(function () {
     Route::get('/login',     [AuthController::class, 'showLogin'])->name('login');
