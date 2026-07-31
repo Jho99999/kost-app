@@ -9,9 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-dvh bg-slate-50 font-sans">
+<body class="min-h-screen bg-slate-50 font-sans">
 
-<div class="flex-1 overflow-y-auto">
+<div class="min-h-screen flex">
 
     {{-- ── Left panel (hidden mobile) ─────────────── --}}
     <div class="hidden lg:flex lg:w-5/12 xl:w-1/2 bg-gradient-to-br from-blue-700 to-blue-900 flex-col justify-between p-12 relative overflow-hidden">
