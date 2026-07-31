@@ -40,31 +40,34 @@ Route::get('/mail-config', function () {
 
 Route::get('/smtp-debug', function () {
 
-    $start = microtime(true);
+    $tests = [];
 
-    $fp = @fsockopen(
-        "smtp.gmail.com",
-        587,
-        $errno,
-        $errstr,
-        10
-    );
+    foreach ([
+        ['google.com', 80],
+        ['google.com', 443],
+        ['smtp.gmail.com', 587],
+        ['smtp-relay.brevo.com', 587],
+    ] as [$host, $port]) {
 
-    if (!$fp) {
-        return response()->json([
-            'success' => false,
+        $start = microtime(true);
+
+        $fp = @fsockopen($host, $port, $errno, $errstr, 5);
+
+        $tests[] = [
+            'host' => $host,
+            'port' => $port,
+            'success' => (bool) $fp,
             'errno' => $errno,
             'errstr' => $errstr,
-            'elapsed' => microtime(true) - $start,
-        ]);
+            'elapsed' => round(microtime(true) - $start, 2),
+        ];
+
+        if ($fp) {
+            fclose($fp);
+        }
     }
 
-    fclose($fp);
-
-    return response()->json([
-        'success' => true,
-        'elapsed' => microtime(true) - $start,
-    ]);
+    return response()->json($tests);
 });
 
 Route::get('/socket-test', function () {
