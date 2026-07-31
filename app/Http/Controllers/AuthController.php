@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -80,22 +82,22 @@ class AuthController extends Controller
     /* ── Logout ──────────────────────────────────── */
 
     public function logout(Request $request): RedirectResponse
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
-        return redirect()->route('login');
-    }
+            return redirect()->route('login');
+        }
 
-    /* ── Lupa Password ──────────────────────────── */
+        /* ── Lupa Password ──────────────────────────── */
 
-    public function showForgotForm(): View
-    {
-        return view('auth.forgot-password');
-    }
+        public function showForgotForm(): View
+        {
+            return view('auth.forgot-password');
+        }
 
-    public function sendResetLink(Request $request): RedirectResponse
+        public function sendResetLink(Request $request): RedirectResponse
     {
         $request->validate([
             'email' => ['required', 'email', 'exists:users,email'],
@@ -103,13 +105,62 @@ class AuthController extends Controller
             'email.exists' => 'Email tidak ditemukan dalam sistem.',
         ]);
 
-        $status = Password::sendResetLink(
-            $request->only('email')
+        $user = User::where('email', $request->email)->first();
+
+        $token = Str::random(64);
+
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $user->email],
+            [
+                'token' => Hash::make($token),
+                'created_at' => now(),
+            ]
         );
 
-        return $status === Password::RESET_LINK_SENT
-            ? back()->with('success', 'Link reset password telah dikirim ke email Anda.')
-            : back()->withErrors(['email' => 'Gagal mengirim email. Coba beberapa saat lagi.']);
+        $url = route('password.reset', $token) .
+            '?email=' . urlencode($user->email);
+
+        $response = Http::withHeaders([
+            'api-key' => env('BREVO_API_KEY'),
+            'accept' => 'application/json',
+            'content-type' => 'application/json',
+        ])->post('https://api.brevo.com/v3/smtp/email', [
+
+            'sender' => [
+                'email' => env('MAIL_FROM_ADDRESS'),
+                'name'  => env('MAIL_FROM_NAME'),
+            ],
+
+            'to' => [[
+                'email' => $user->email,
+                'name' => $user->name,
+            ]],
+
+            'subject' => 'Reset Password',
+
+            'htmlContent' => view(
+                'emails.reset-password',
+                [
+                    'user' => $user,
+                    'url' => $url,
+                ]
+            )->render(),
+
+        ]);
+
+        if (! $response->successful()) {
+
+            dd(
+                $response->status(),
+                $response->body()
+            );
+
+        }
+
+        return back()->with(
+            'success',
+            'Link reset password telah dikirim ke email Anda.'
+        );
     }
 
     public function showResetForm(string $token): View
