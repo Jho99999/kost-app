@@ -37,17 +37,7 @@ $statusLabel = match($room->status) {
     <div class="lg:col-span-2 space-y-5">
         <div class="card">
             <div class="card-body p-0 overflow-hidden rounded-xl">
-                @if(!empty($room->images))
-                    <div x-data="{ active: 0 }">
-                        <img :src="images[active]"
-                             x-init="$el.setAttribute('src', images[0])"
-                             :src="images[active]"
-                             alt="{{ $room->name }}"
-                             class="w-full h-72 object-cover"
-                             x-bind:src="'{{ asset('storage/') }}/' + images[active]">
-                        {{-- JS: inject images array --}}
-                        <div x-data="{ images: {{ json_encode($room->images) }} }" class="hidden"></div>
-                    </div>
+                @if(!empty($room->images[0]))
                     @php $imgs = $room->images; @endphp
                     {{-- Fallback non-JS render + Alpine gallery --}}
                     <div x-data="{ active: 0, imgs: {{ json_encode(array_map(fn($p) => asset('storage/'.$p), $imgs)) }} }">
@@ -188,14 +178,14 @@ $statusLabel = match($room->status) {
         </div>
 
         {{-- Fasilitas --}}
-        @if(!empty($room->facilities))
+        @if(count($room->facilities ?? []))
         <div class="card">
             <div class="card-header">
                 <h3 class="text-sm font-semibold text-gray-700">Fasilitas</h3>
             </div>
             <div class="card-body">
                 <div class="flex flex-wrap gap-1.5">
-                    @foreach($room->facilities as $f)
+                    @foreach($room->facilities ?? [] as $f)
                         <span class="badge badge-gray">{{ $f }}</span>
                     @endforeach
                 </div>

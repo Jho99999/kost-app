@@ -14,10 +14,7 @@
   </nav>
 
   @php
-    $isAvailable   = $room->status === 'available';
-    $activeBooking = auth()->user()->bookings()
-                        ->whereIn('status', ['pending', 'approved'])
-                        ->first();
+      $isAvailable = $room->status === 'available';
   @endphp
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

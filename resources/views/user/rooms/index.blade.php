@@ -76,7 +76,7 @@
 
                 {{-- Foto --}}
                 <div class="relative h-44 bg-slate-100 overflow-hidden flex-shrink-0">
-                    @if(!empty($room->images))
+                    @if(!empty($room->images[0]))
                         <img src="{{ asset('storage/' . $room->images[0]) }}"
                              alt="{{ $room->name }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">

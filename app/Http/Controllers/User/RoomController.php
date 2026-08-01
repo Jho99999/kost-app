@@ -35,6 +35,16 @@ class RoomController extends Controller
         // Kamar sedang perbaikan tidak bisa dilihat penghuni
         abort_if($room->status === 'maintenance', 404, 'Kamar tidak tersedia.');
 
-        return view('user.rooms.show', compact('room'));
+        $activeBooking = auth()->check()
+            ? auth()->user()
+                ->bookings()
+                ->whereIn('status', ['pending', 'approved'])
+                ->first()
+            : null;
+
+        return view('user.rooms.show', compact(
+            'room',
+            'activeBooking'
+        ));
     }
 }

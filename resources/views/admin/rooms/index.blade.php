@@ -83,7 +83,7 @@
                     <td class="table-td">
                         <div class="flex items-center gap-3">
                             {{-- Thumbnail --}}
-                            @if(!empty($room->images))
+                            @if(!empty($room->images[0]))
                                 <img src="{{ asset('storage/' . $room->images[0]) }}"
                                      alt="{{ $room->name }}"
                                      class="w-10 h-10 rounded-lg object-cover flex-shrink-0">
