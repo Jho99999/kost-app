@@ -70,6 +70,16 @@ Route::get('/smtp-debug', function () {
     return response()->json($tests);
 });
 
+use Illuminate\Support\Facades\File;
+
+Route::get('/check-storage', function () {
+    return [
+        'public_storage_exists' => File::exists(public_path('storage')),
+        'public_storage_is_link' => is_link(public_path('storage')),
+        'storage_app_public_exists' => File::exists(storage_path('app/public')),
+    ];
+});
+
 Route::get('/smtp-ports', function () {
 
     $tests = [];
