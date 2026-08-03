@@ -28,7 +28,7 @@
             <div class="flex-1 min-w-36">
                 <label class="block text-xs font-medium text-gray-500 mb-1">Harga Maks (Rp)</label>
                 <input type="number" name="max_price" value="{{ request('max_price') }}"
-                       placeholder="Semua harga" min="1" step="100000"
+                       placeholder="Semua harga" min="1" step="1"
                        class="form-input w-full">
             </div>
 
