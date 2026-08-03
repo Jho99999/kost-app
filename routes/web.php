@@ -15,14 +15,15 @@ use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\PaymentController as UserPaymentController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\RoomController as UserRoomController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    if (! auth()->check()) {
+    if (! Auth::check()) {
         return view('welcome');
     }
 
-    return auth()->user()->isAdmin()
+    return Auth::user()->is_admin
         ? redirect()->route('admin.dashboard')
         : app(HomeController::class)->index();
 })->name('home');
