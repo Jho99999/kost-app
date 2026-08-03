@@ -14,7 +14,7 @@
   </nav>
 
   {{-- Header --}}
-  <div class="flex items-center justify-between mb-6">
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <h1 class="text-xl font-bold text-gray-900">{{ $complaint->title }}</h1>
     <span class="{{ $complaint->status_color }} text-sm px-3 py-1">{{ $complaint->status_label }}</span>
   </div>
@@ -77,7 +77,7 @@
   @endif
 
   <a href="{{ route('complaints.index') }}"
-     class="mt-5 inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600">
+     class="back-link mt-5">
     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
     </svg>

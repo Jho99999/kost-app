@@ -35,15 +35,26 @@ class RoomController extends Controller
 
     public function store(StoreRoomRequest $request): RedirectResponse
     {
-        $data                = $request->validated();
-        $data['facilities']  = $request->input('facilities', []);
-        $data['images']      = $this->uploadImages($request);
+        $data = $request->validated();
 
-        $room = Room::create($data);
+        $this->calculateArea($data);
+
+        $data['facilities'] = array_values(
+            array_filter($data['facilities'] ?? [])
+        );
+        
+        $data['images'] = $this->uploadImages($request);
+
+       
+        $data['cover_image'] = min(
+            (int) $request->input('cover_image', 0),
+            max(count($data['images']) - 1, 0)
+        );
+        Room::create($data);
 
         return redirect()
-            ->route('admin.rooms.show', $room)
-            ->with('success', "Kamar {$room->name} berhasil ditambahkan.");
+            ->route('admin.rooms.index')
+            ->with('success', 'Kamar berhasil ditambahkan.');
     }
 
     public function show(Room $room): View
@@ -60,14 +71,22 @@ class RoomController extends Controller
 
     public function update(UpdateRoomRequest $request, Room $room): RedirectResponse
     {
-        $data               = $request->validated();
-        $data['facilities'] = $request->input('facilities', []);
+        $data = $request->validated();
 
-        // Foto baru ditambahkan ke daftar yang sudah ada (tidak mengganti)
-        $existing    = $room->images ?? [];
-        $uploaded    = $this->uploadImages($request);
-        $data['images'] = array_merge($existing, $uploaded) ?: null;
+        $data['facilities'] = array_values(
+            array_filter($data['facilities'] ?? [])
+        );
 
+        $existing = $room->images ?? [];
+        $uploaded = $this->uploadImages($request);
+
+        $data['images'] = array_merge($existing, $uploaded);
+        $this->calculateArea($data);
+        $data['cover_image'] = min(
+            (int) $request->input('cover_image', $room->cover_image ?? 0),
+            max(count($data['images']) - 1, 0)
+        );
+        
         $room->update($data);
 
         return redirect()
@@ -89,21 +108,53 @@ class RoomController extends Controller
             ->with('success', "Kamar {$name} berhasil dihapus.");
     }
 
+    private function calculateArea(array &$data): void
+    {
+        $data['size_sqm'] = null;
+
+        if (!empty($data['length_m']) &&
+            !empty($data['width_m'])) {
+
+            $data['size_sqm'] = round(
+                $data['length_m'] * $data['width_m'],
+                2
+            );
+        }
+    }
     /**
      * Hapus satu foto dari kamar.
      * Route: DELETE /admin/rooms/{room}/images  (body: image=rooms/xxx.jpg)
      */
     public function destroyImage(Request $request, Room $room): RedirectResponse
     {
+        
         $target = $request->input('image');
-
+        if (!in_array($target, $room->images ?? [])) {
+            abort(404);
+        }
         $images = collect($room->images ?? [])
             ->reject(fn ($img) => $img === $target)
             ->values()
             ->all();
 
         Storage::disk('public')->delete($target);
-        $room->update(['images' => $images ?: null]);
+        $cover = $room->cover_image ?? 0;
+
+        $deletedIndex = array_search($target, $room->images ?? []);
+
+        if ($deletedIndex !== false) {
+
+            if ($cover == $deletedIndex) {
+                $cover = 0;
+            } elseif ($cover > $deletedIndex) {
+                $cover--;
+            }
+        }
+
+        $room->update([
+            'images' => $images ?: null,
+            'cover_image' => $images ? $cover : 0,
+        ]);
 
         return back()->with('success', 'Foto berhasil dihapus.');
     }
@@ -114,11 +165,17 @@ class RoomController extends Controller
     private function uploadImages(Request $request): array
     {
         $paths = [];
-        foreach ($request->file('images', []) as $file) {
-            // Path: storage/app/public/rooms/xxx.jpg
-            // URL:  /storage/rooms/xxx.jpg  (setelah php artisan storage:link)
-            $paths[] = $file->store('rooms', 'public');
+
+        if (!$request->hasFile('images')) {
+            return [];
         }
+
+        foreach ($request->file('images') as $file) {
+            if ($file->isValid()) {
+                $paths[] = $file->store('rooms', 'public');
+            }
+        }
+
         return $paths;
     }
 }

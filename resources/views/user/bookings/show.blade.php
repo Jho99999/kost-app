@@ -34,7 +34,7 @@
   @endphp
 
   {{-- Header status --}}
-  <div class="flex items-center justify-between mb-6">
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
     <div>
       <h1 class="text-xl font-bold text-gray-900">Detail Pemesanan</h1>
       <p class="text-sm font-mono text-gray-400 mt-0.5">{{ $booking->booking_code }}</p>
@@ -144,7 +144,7 @@
 
   <div class="mt-6">
     <a href="{{ route('bookings.index') }}"
-       class="text-sm text-gray-400 hover:text-gray-600 flex items-center gap-1.5">
+       class="back-link">
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
       </svg>

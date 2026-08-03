@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <title>@yield('title', 'Kost')</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="h-full bg-gray-50 font-sans antialiased" x-data="{ navOpen: false }">
@@ -115,6 +116,10 @@
         </a>
       @endforeach
       <div class="pt-2 mt-1 border-t border-gray-100">
+        <a href="{{ route('profile.edit') }}"
+           class="block px-3 py-2.5 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+          Profil
+        </a>
         <p class="px-3 text-xs text-gray-400 mb-1 truncate">{{ auth()->user()->email }}</p>
         <form method="POST" action="{{ route('logout') }}">
           @csrf

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Booking;
 use App\Models\Room;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -10,7 +9,7 @@ class StoreBookingRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->check();
+        return $this->user() !== null;
     }
 
     public function rules(): array
@@ -36,10 +35,10 @@ class StoreBookingRequest extends FormRequest
     }
 
     /** Validasi bisnis yang tidak bisa dihandle rules standar */
-    public function withValidator($validator): void
+    public function withValidator(\Illuminate\Contracts\Validation\Validator $validator): void
     {
         $validator->after(function ($v) {
-            $user = auth()->user();
+            $user = $this->user();
 
             // Cek KTP
             if (! $user->ktp_image) {

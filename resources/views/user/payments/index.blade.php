@@ -63,7 +63,7 @@
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
             @if($needsAttention)
-              <span class="text-xs text-amber-600 font-medium bg-amber-50 px-2 py-1 rounded-lg">Upload bukti</span>
+              <span class="text-xs text-amber-600 font-medium bg-amber-50 px-2 py-1 rounded-lg">Bayar sekarang</span>
             @endif
             <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/>

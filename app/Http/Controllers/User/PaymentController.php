@@ -5,9 +5,11 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UploadPaymentProofRequest;
 use App\Models\Payment;
+use App\Models\PaymentMethod;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class PaymentController extends Controller
@@ -30,9 +32,14 @@ class PaymentController extends Controller
     {
         abort_if($payment->user_id !== auth()->id(), 403, 'Akses ditolak.');
 
-        $payment->load(['booking.room', 'verifiedBy']);
+        $payment->load(['booking.room', 'verifiedBy', 'paymentMethod']);
+        $paymentMethods = PaymentMethod::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
 
-        return view('user.payments.show', compact('payment'));
+        return view('user.payments.show', compact('payment', 'paymentMethods'));
     }
 
     /**
@@ -59,20 +66,27 @@ class PaymentController extends Controller
         return back()->with('success', 'Bukti pembayaran berhasil diunggah. Menunggu verifikasi admin.');
     }
 
-    /** Simpan metode pembayaran yang dipilih user (cash|transfer) */
+    /** Simpan metode pembayaran aktif yang dipilih user. */
     public function selectMethod(Request $request, Payment $payment): RedirectResponse
     {
         abort_if($payment->user_id !== auth()->id(), 403, 'Akses ditolak.');
         abort_if($payment->status === 'paid', 422, 'Tagihan sudah lunas.');
 
         $request->validate([
-            'method' => ['required', 'in:cash,transfer'],
+            'payment_method_id' => [
+                'required',
+                Rule::exists('payment_settings', 'id')
+                    ->where('is_active', true),
+            ],
         ]);
+
+        $method = PaymentMethod::findOrFail($request->integer('payment_method_id'));
 
         $payment->update([
-            'payment_method' => $request->method,
+            'payment_method_id' => $method->id,
+            'payment_method' => $method->type === 'qris' ? 'qris' : 'transfer',
         ]);
 
-        return back()->with('success', 'Metode pembayaran disimpan. Silakan unggah bukti setelah melakukan pembayaran.');
+        return back()->with('success', 'Metode pembayaran dipilih. Silakan lanjutkan pembayaran sesuai instruksi.');
     }
 }

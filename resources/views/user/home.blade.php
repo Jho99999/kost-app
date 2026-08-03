@@ -83,7 +83,7 @@
       @if($nextPayment->status !== 'paid')
         <a href="{{ route('payments.show', $nextPayment) }}"
            class="mt-4 btn btn-primary btn-sm w-full text-center block">
-          {{ $nextPayment->proof_image ? 'Lihat Status Tagihan' : 'Upload Bukti Bayar' }}
+          {{ $nextPayment->proof_image ? 'Lihat Status Tagihan' : 'Bayar Sekarang' }}
         </a>
       @else
         <p class="mt-4 text-xs text-green-600 font-medium text-center">✓ Tagihan ini sudah lunas</p>

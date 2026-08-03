@@ -1,18 +1,68 @@
 @extends('layouts.admin')
 @section('title', 'Tambah Kamar')
 @section('page-title', 'Tambah Kamar')
-
 @section('content')
 
 @php
+
 $facilities = [
-    'WiFi','AC','Kipas Angin','Lemari','Kamar Mandi Dalam',
-    'TV','Meja Kerja','Parkir Motor','Dapur Bersama','Laundry',
+
+'WiFi',
+'AC',
+'Kipas Angin',
+
+'Kasur',
+'Spring Bed',
+'Bantal',
+'Guling',
+'Sprei',
+
+'Lemari',
+'Rak Sepatu',
+
+'Meja',
+'Meja Belajar',
+'Kursi',
+
+'TV',
+'Kulkas',
+'Mini Kulkas',
+
+'Dispenser',
+'Rice Cooker',
+'Kompor',
+'Microwave',
+
+'Kitchen Set',
+'Dapur Bersama',
+
+'Mesin Cuci',
+'Laundry',
+
+'Shower',
+'Water Heater',
+'Wastafel',
+
+'Closet Duduk',
+'Closet Jongkok',
+
+'Internet LAN',
+
+'Parkir Motor',
+'Parkir Mobil',
+
+'CCTV',
+'Keamanan 24 Jam',
+
+'Balkon',
+'Jemuran',
+
 ];
+
 @endphp
 
 <form method="POST" action="{{ route('admin.rooms.store') }}"
-      enctype="multipart/form-data" novalidate>
+      enctype="multipart/form-data">
 @csrf
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -33,6 +83,23 @@ $facilities = [
                            placeholder="cth. Kamar 101" required
                            class="form-input @error('name') ring-1 ring-red-400 @enderror">
                     @error('name')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Nomor Kamar
+                    </label>
+
+                    <input
+                        type="text"
+                        name="room_number"
+                        value="{{ old('room_number') }}"
+                        placeholder="A-101"
+                        class="form-input @error('room_number') ring-1 ring-red-400 @enderror">
+
+                    @error('room_number')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div>
@@ -75,20 +142,109 @@ $facilities = [
                 </div>
 
                 <div>
-                    <label for="size_sqm" class="form-label">Luas (m²)</label>
-                    <input type="number" id="size_sqm" name="size_sqm"
-                           value="{{ old('size_sqm') }}" min="1" placeholder="Opsional"
-                           class="form-input @error('size_sqm') ring-1 ring-red-400 @enderror">
-                    @error('size_sqm')<p class="form-error">{{ $message }}</p>@enderror
+
+                    <label class="form-label">
+
+                        Panjang (m)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.1"
+                        min="1"
+                        name="length_m"
+                        value="{{ old('length_m') }}"
+                        class="form-input @error('length_m') ring-1 ring-red-400 @enderror">
+
+                    @error('length_m')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+
+                        Lebar (m)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.1"
+                        min="1"
+                        name="width_m"
+                        value="{{ old('width_m') }}"
+                        class="form-input @error('width_m') ring-1 ring-red-400 @enderror">
+
+                    @error('width_m')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+
+                </div>
+
+                <div>
+                    <label class="form-label">
+                        Luas Kamar
+                    </label>
+
+                    <input
+                        type="text"
+                        id="preview_area"
+                        class="form-input bg-gray-100"
+                        readonly>
+
+                    <input
+                        type="hidden"
+                        id="size_sqm"
+                        name="size_sqm"
+                        value="{{ old('size_sqm') }}">
                 </div>
 
                 <div>
                     <label for="price" class="form-label">Harga / Bulan (Rp) <span class="text-red-500">*</span></label>
-                    <input type="number" id="price" name="price"
-                           value="{{ old('price') }}" min="1" step="1000" required
-                           placeholder="800000"
-                           class="form-input @error('price') ring-1 ring-red-400 @enderror">
+                    <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        value="{{ old('price') }}"
+                        min="0"
+                        step="1000"
+                        placeholder="400000"
+                        required
+                        class="form-input @error('price') ring-1 ring-red-400 @enderror">
                     @error('price')<p class="form-error">{{ $message }}</p>@enderror
+                    <p
+                        id="price_preview"
+                        class="text-xs text-gray-500 mt-1">
+                    </p>
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+
+                        Deposit (Rp)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        min="0"
+                        step="1000"
+                        name="deposit"
+                        value="{{ old('deposit', '') }}"
+                        class="form-input @error('deposit') ring-1 ring-red-400 @enderror">
+
+                    @error('deposit')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+                    <p
+                        id="deposit_preview"
+                        class="text-xs text-gray-500 mt-1">
+                    </p>
                 </div>
 
                 <div class="sm:col-span-2">
@@ -102,6 +258,174 @@ $facilities = [
             </div>
         </div>
 
+        <div class="card">
+
+            <div class="card-header">
+
+                <h3 class="text-sm font-semibold text-gray-700">
+
+                    Spesifikasi Kamar
+
+                </h3>
+
+            </div>
+
+            <div class="card-body grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                <div>
+
+                    <label class="form-label">
+
+                        Jenis Kamar Mandi
+
+                    </label>
+
+                    <select
+                        required
+                        name="bathroom_type"
+                        class="form-select @error('bathroom_type') ring-1 ring-red-400 @enderror">
+
+                        <option value="" @selected(old('bathroom_type') === '')>
+                            Pilih jenis kamar mandi…
+                        </option>
+
+                        <option value="inside"
+                            @selected(old('bathroom_type') == 'inside')>
+                            Dalam
+                        </option>
+
+                        <option value="outside"
+                            @selected(old('bathroom_type') == 'outside')>
+                            Luar
+                        </option>
+
+                        <option value="shared"
+                            @selected(old('bathroom_type') == 'shared')>
+                            Bersama
+                        </option>
+
+                    </select>
+                    @error('bathroom_type')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+
+                        Furnished
+
+                    </label>
+
+                    <select
+                        required
+                        name="furnished"
+                        class="form-select @error('furnished') ring-1 ring-red-400 @enderror">
+
+                        <option value="" @selected(old('furnished') === '')>
+                            Pilih furnished…
+                        </option>
+
+                        <option value="empty"
+                            @selected(old('furnished') == 'empty')>
+                            Kosong
+                        </option>
+
+                        <option value="semi"
+                            @selected(old('furnished') == 'semi')>
+                            Semi Furnished
+                        </option>
+
+                        <option value="full"
+                            @selected(old('furnished') == 'full')>
+                            Full Furnished
+                        </option>
+
+                    </select>
+                    @error('furnished')<p class="form-error">{{ $message }}</p>@enderror
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+
+                        Listrik
+
+                    </label>
+
+                    <select
+                        required
+                        name="electricity_type"
+                        class="form-select @error('electricity_type') ring-1 ring-red-400 @enderror">
+
+                        <option value="" @selected(old('electricity_type') === '')>
+                            Pilih listrik…
+                        </option>
+
+                        <option value="included"
+                            @selected(old('electricity_type') == 'included')>
+                            Termasuk
+                        </option>
+
+                        <option value="token"
+                            @selected(old('electricity_type') == 'token')>
+                            Token
+                        </option>
+
+                        <option value="meter"
+                            @selected(old('electricity_type') == 'meter')>
+                            Sesuai Pemakaian
+                        </option>
+
+                    </select>
+                    @error('electricity_type')<p class="form-error">{{ $message }}</p>@enderror
+
+                </div>
+
+                <div>
+
+                    <label class="form-label">
+
+                        Air
+
+                    </label>
+
+                    <select
+                        required
+                        name="water_type"
+                        class="form-select @error('water_type') ring-1 ring-red-400 @enderror">
+
+                        <option value="" @selected(old('water_type') === '')>
+                            Pilih air…
+                        </option>
+
+                        <option value="included"
+                            @selected(old('water_type') == 'included')>
+                            Termasuk
+                        </option>
+
+                        <option value="meter"
+                            @selected(old('water_type') == 'meter')>
+                            Meteran
+                        </option>
+
+                        <option value="well"
+                            @selected(old('water_type') == 'well')>
+                            Sumur
+                        </option>
+
+                    </select>
+                    @error('water_type')<p class="form-error">{{ $message }}</p>@enderror
+
+                </div>
+
+            </div>
+
+        </div>
+        
         {{-- Fasilitas --}}
         <div class="card">
             <div class="card-header">
@@ -128,16 +452,36 @@ $facilities = [
     <div class="space-y-4">
 
         {{-- Upload foto --}}
-        <div class="card" x-data="photoUpload()">
+        <div
+            class="card"
+            x-data="photoUpload()"
+            x-init="
+                $el.addEventListener('alpine:destroy', () => destroy())
+            ">
             <div class="card-header">
                 <h3 class="text-sm font-semibold text-gray-700">Foto Kamar</h3>
             </div>
             <div class="card-body space-y-3">
 
                 {{-- Drop zone --}}
-                <div @click="$refs.input.click()"
-                     class="border-2 border-dashed border-gray-200 rounded-xl p-5 text-center cursor-pointer
-                            hover:border-blue-400 hover:bg-blue-50 transition-colors">
+                <div
+                    @click="$refs.input.click()"
+
+                    @dragover.prevent
+
+                    @drop.prevent="dropFiles($event)"
+
+                    class="
+                        border-2
+                        border-dashed
+                        border-gray-200
+                        rounded-xl
+                        p-5
+                        text-center
+                        cursor-pointer
+                        hover:border-blue-500
+                        hover:bg-blue-50
+                        transition">
                     <svg class="w-7 h-7 text-gray-300 mx-auto mb-1.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"/>
                     </svg>
@@ -156,18 +500,48 @@ $facilities = [
                 <template x-if="previews.length">
                     <div>
                         <div class="grid grid-cols-3 gap-2">
+
                             <template x-for="(url, i) in previews" :key="i">
                                 <div class="relative group aspect-square">
-                                    <img :src="url" class="w-full h-full object-cover rounded-lg">
-                                    <button type="button" @click="remove(i)"
-                                            class="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500 text-white
-                                                   text-xs leading-none flex items-center justify-center
-                                                   opacity-0 group-hover:opacity-100 transition-opacity shadow">
+
+                                    <img
+                                        :src="url"
+                                        class="w-full h-full object-cover rounded-lg">
+
+                                    <label
+                                        class="absolute bottom-1 left-1 bg-white rounded px-2 py-1 text-xs shadow flex items-center gap-1">
+
+                                        <input
+                                            type="radio"
+                                            name="cover_selector"
+                                            x-model="cover"
+                                            :value="i">
+
+                                        <span>Cover</span>
+
+                                    </label>
+
+                                    <button
+                                        type="button"
+                                        @click="remove(i)"
+                                        class="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500 text-white
+                                            text-xs leading-none flex items-center justify-center
+                                            opacity-0 group-hover:opacity-100 transition-opacity shadow">
+
                                         ×
+
                                     </button>
+
                                 </div>
                             </template>
+
                         </div>
+
+                        <!-- Hanya SATU hidden input -->
+                        <input
+                            type="hidden"
+                            name="cover_image"
+                            :value="cover">
                         <p class="text-xs text-gray-400 mt-2" x-text="`${previews.length} foto dipilih`"></p>
                     </div>
                 </template>
@@ -187,35 +561,196 @@ $facilities = [
 
 @push('scripts')
 <script>
+
+document.addEventListener('DOMContentLoaded', () => {
+
+
+    const length = document.querySelector('[name=length_m]');
+    const width  = document.querySelector('[name=width_m]');
+    const area   = document.getElementById('preview_area');
+    if (!length || !width || !area) {
+        return;
+    }
+    const roomNumber = document.querySelector('[name=room_number]');
+    const priceInput = document.getElementById('price');
+    const depositInput = document.querySelector('[name=deposit]');
+
+    const pricePreview = document.getElementById('price_preview');
+    const depositPreview = document.getElementById('deposit_preview');
+    
+    function rupiah(v){
+
+        if (v === '' || v === null) {
+            return '';
+        }
+
+        return 'Rp ' + Number(v).toLocaleString('id-ID');
+
+    }
+
+    function updateMoney(){
+
+        pricePreview.textContent =
+            priceInput.value
+                ? rupiah(priceInput.value) + ' / bulan'
+                : '';
+
+        depositPreview.textContent =
+            depositInput.value
+                ? 'Deposit : ' + rupiah(depositInput.value)
+                : '';
+
+    }
+
+    if(priceInput){
+
+        priceInput.addEventListener('input', updateMoney);
+    }
+    if(depositInput){
+        depositInput.addEventListener('input', updateMoney);
+    }
+
+    updateMoney();
+        if (roomNumber) {
+
+        roomNumber.value = roomNumber.value.toUpperCase();
+
+        roomNumber.addEventListener('input', function () {
+            this.value = this.value.toUpperCase();
+        });
+
+    }
+    const hiddenArea = document.getElementById('size_sqm');
+    if (!hiddenArea) {
+        return;
+    }
+    function calculateArea() {
+
+        const l = parseFloat(length.value) || 0;
+        const w = parseFloat(width.value) || 0;
+
+        if (l > 0 && w > 0) {
+
+            const total = l * w;
+
+            area.value =
+            `${l} × ${w} = ${total.toFixed(2)} m²`;
+
+            hiddenArea.value =
+            total.toFixed(2);
+
+        } else {
+
+            area.value = '';
+
+            hiddenArea.value = '';
+
+        }
+    }
+
+    length.addEventListener('input', calculateArea);
+    width.addEventListener('input', calculateArea);
+
+    calculateArea();
+
+});
+console.log('script loaded');
 function photoUpload() {
+
+    const allowed = [
+        'image/jpeg',
+        'image/png',
+        'image/webp'
+    ];
     return {
         previews : [],
         fileList  : [],
+        cover: 0,
+        
+        addFile(file) {
 
-        pick(e) {
-            const incoming = Array.from(e.target.files);
-            incoming.forEach(f => {
-                if (this.fileList.length < 6) {
-                    this.previews.push(URL.createObjectURL(f));
-                    this.fileList.push(f);
-                }
-            });
-            this.syncInput();
+            if (this.fileList.length >= 6) {
+                alert('Maksimal 6 foto.');
+                return;
+            }
+
+            if (!allowed.includes(file.type)) {
+                alert('Format harus JPG, PNG atau WebP.');
+                return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran maksimal 2 MB.');
+                return;
+            }
+
+            const exists = this.fileList.some(f =>
+                f.name === file.name &&
+                f.size === file.size &&
+                f.lastModified === file.lastModified
+            );
+
+            if (exists) {
+                return;
+            }
+
+            this.fileList.push(file);
+            this.previews.push(URL.createObjectURL(file));
+
+            if (this.fileList.length === 1) {
+                this.cover = 0;
+            }
         },
+        remove(i){
 
-        remove(i) {
             URL.revokeObjectURL(this.previews[i]);
-            this.previews.splice(i, 1);
-            this.fileList.splice(i, 1);
+
+            this.previews.splice(i,1);
+            this.fileList.splice(i,1);
+
+            if (this.fileList.length === 0) {
+                this.cover = 0;
+            }
+            else if (this.cover === i) {
+                this.cover = 0;
+            }
+            else if (this.cover > i) {
+                this.cover--;
+            }
+
+            this.syncInput();
+
+        }, // <-- WAJIB
+        pick(e) {
+
+            Array.from(e.target.files).forEach(file => this.addFile(file));
+
+            this.syncInput();
+
+        },
+        syncInput() {
+
+            const dt = new DataTransfer();
+
+            this.fileList.forEach(f => dt.items.add(f));
+
+            this.$refs.input.files = dt.files;
+
+            console.log("input files =", this.$refs.input.files);
+            console.log("length =", this.$refs.input.files.length);
+
+        },
+
+        dropFiles(e) {
+            Array.from(e.dataTransfer.files).forEach(file => this.addFile(file));
+
             this.syncInput();
         },
 
-        syncInput() {
-            // Tulis ulang file input agar sesuai dengan fileList saat ini
-            const dt = new DataTransfer();
-            this.fileList.forEach(f => dt.items.add(f));
-            this.$refs.input.files = dt.files;
-        },
+        destroy() {
+            this.previews.forEach(url => URL.revokeObjectURL(url));
+        }
+
     };
 }
 </script>

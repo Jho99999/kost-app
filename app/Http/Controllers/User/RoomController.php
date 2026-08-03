@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Booking;             
 use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class RoomController extends Controller
@@ -35,8 +37,8 @@ class RoomController extends Controller
         // Kamar sedang perbaikan tidak bisa dilihat penghuni
         abort_if($room->status === 'maintenance', 404, 'Kamar tidak tersedia.');
 
-        $activeBooking = auth()->check()
-            ? auth()->user()
+        $activeBooking = Auth::check()
+            ? Auth::user()
                 ->bookings()
                 ->whereIn('status', ['pending', 'approved'])
                 ->first()

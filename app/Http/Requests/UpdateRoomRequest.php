@@ -2,15 +2,28 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
+
 class UpdateRoomRequest extends StoreRoomRequest
 {
-    // Mewarisi semua rules dan messages dari StoreRoomRequest.
-    // Images bersifat opsional saat update (tidak wajib upload ulang).
     public function rules(): array
     {
         $rules = parent::rules();
-        $rules['images']   = ['nullable', 'array', 'max:6'];
-        $rules['images.*'] = ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'];
+
+        $rules['room_number'] = [
+            'required',
+            'string',
+            'max:20',
+            Rule::unique('rooms', 'room_number')
+                ->ignore($this->route('room')->id),
+        ];
+
+        $rules['cover_image'] = [
+            'nullable',
+            'integer',
+            'min:0',
+        ];
+
         return $rules;
     }
 }

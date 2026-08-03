@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class Payment extends Model
@@ -17,6 +18,7 @@ class Payment extends Model
         'amount',
         'due_date',
         'payment_method',
+        'payment_method_id',
         'month_period',
         'status',
         'month_number',
@@ -51,6 +53,11 @@ class Payment extends Model
     public function verifiedBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'verified_by');
+    }
+
+    public function paymentMethod(): BelongsTo
+    {
+        return $this->belongsTo(PaymentMethod::class);
     }
 
     // ── Scopes ────────────────────────────────────────────────────────

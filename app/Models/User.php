@@ -90,4 +90,14 @@ class User extends Authenticatable
             ->whereIn('status', ['approved', 'active'])
             ->latest();
     }
+
+    public function getGenderLabelAttribute(): string
+    {
+        return match ($this->gender) {
+            'L' => 'Laki-laki',
+            'P' => 'Perempuan',
+            default => '-',
+        };
+    }
+
 }

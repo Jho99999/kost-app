@@ -6,11 +6,73 @@
 
 @php
 $facilities = [
-    'WiFi','AC','Kipas Angin','Lemari','Kamar Mandi Dalam',
-    'TV','Meja Kerja','Parkir Motor','Dapur Bersama','Laundry',
+
+'WiFi',
+'AC',
+'Kipas Angin',
+
+'Kasur',
+'Spring Bed',
+'Bantal',
+'Guling',
+'Sprei',
+
+'Lemari',
+'Rak Sepatu',
+
+'Meja',
+'Meja Belajar',
+'Kursi',
+
+'TV',
+'Kulkas',
+'Mini Kulkas',
+
+'Dispenser',
+'Rice Cooker',
+'Kompor',
+'Microwave',
+
+'Kitchen Set',
+'Dapur Bersama',
+
+'Mesin Cuci',
+'Laundry',
+
+'Shower',
+'Water Heater',
+'Wastafel',
+
+'Closet Duduk',
+'Closet Jongkok',
+
+'Internet LAN',
+
+'Parkir Motor',
+'Parkir Mobil',
+
+'CCTV',
+'Keamanan 24 Jam',
+
+'Balkon',
+'Jemuran',
+
 ];
+
 $existingFacilities = $room->facilities ?? [];
 @endphp
+
+{{-- Form hapus foto tidak boleh berada di dalam form edit kamar. --}}
+@foreach($room->images ?? [] as $index => $img)
+<form id="delete-image-{{ $index }}"
+      method="POST"
+      action="{{ route('admin.rooms.images.destroy', $room) }}"
+      class="hidden">
+    @csrf
+    @method('DELETE')
+    <input type="hidden" name="image" value="{{ $img }}">
+</form>
+@endforeach
 
 <form method="POST" action="{{ route('admin.rooms.update', $room) }}"
       enctype="multipart/form-data" novalidate>
@@ -33,6 +95,15 @@ $existingFacilities = $room->facilities ?? [];
                            value="{{ old('name', $room->name) }}" required
                            class="form-input @error('name') ring-1 ring-red-400 @enderror">
                     @error('name')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label class="form-label">Nomor Kamar</label>
+                    <input type="text" name="room_number"
+                           value="{{ old('room_number', $room->room_number) }}"
+                           placeholder="A-101"
+                           class="form-input @error('room_number') ring-1 ring-red-400 @enderror">
+                    @error('room_number')<p class="form-error">{{ $message }}</p>@enderror
                 </div>
 
                 <div>
@@ -74,11 +145,38 @@ $existingFacilities = $room->facilities ?? [];
                 </div>
 
                 <div>
-                    <label for="size_sqm" class="form-label">Luas (m²)</label>
-                    <input type="number" id="size_sqm" name="size_sqm"
-                           value="{{ old('size_sqm', $room->size_sqm) }}" min="1"
-                           class="form-input @error('size_sqm') ring-1 ring-red-400 @enderror">
-                    @error('size_sqm')<p class="form-error">{{ $message }}</p>@enderror
+                    <label class="form-label">Panjang (m)</label>
+                    <input type="number" step="0.1" min="1" name="length_m"
+                           value="{{ old('length_m', $room->length_m) }}"
+                           class="form-input @error('length_m') ring-1 ring-red-400 @enderror">
+                    @error('length_m')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label class="form-label">Lebar (m)</label>
+                    <input type="number" step="0.1" min="1" name="width_m"
+                           value="{{ old('width_m', $room->width_m) }}"
+                           class="form-input @error('width_m') ring-1 ring-red-400 @enderror">
+                    @error('width_m')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label class="form-label">Luas Kamar</label>
+
+                    <input
+                        type="text"
+                        id="preview_area"
+                        class="form-input bg-gray-100"
+                        readonly
+                        value="{{ old('length_m',$room->length_m)
+                            ? old('length_m',$room->length_m).' × '.old('width_m',$room->width_m).' = '.old('size_sqm',$room->size_sqm).' m²'
+                            : '' }}">
+
+                    <input
+                        type="hidden"
+                        id="size_sqm"
+                        name="size_sqm"
+                        value="{{ old('size_sqm',$room->size_sqm) }}">
                 </div>
 
                 <div>
@@ -87,6 +185,16 @@ $existingFacilities = $room->facilities ?? [];
                            value="{{ old('price', $room->price) }}" min="1" step="1000" required
                            class="form-input @error('price') ring-1 ring-red-400 @enderror">
                     @error('price')<p class="form-error">{{ $message }}</p>@enderror
+                    <p id="price_preview" class="text-xs text-gray-500 mt-1"></p>
+                </div>
+
+                <div>
+                    <label class="form-label">Deposit (Rp)</label>
+                    <input type="number" min="0" step="1000" name="deposit"
+                           value="{{ old('deposit', $room->deposit) }}"
+                           class="form-input @error('deposit') ring-1 ring-red-400 @enderror">
+                    @error('deposit')<p class="form-error">{{ $message }}</p>@enderror
+                    <p id="deposit_preview" class="text-xs text-gray-500 mt-1"></p>
                 </div>
 
                 <div class="sm:col-span-2">
@@ -96,6 +204,61 @@ $existingFacilities = $room->facilities ?? [];
                     @error('description')<p class="form-error">{{ $message }}</p>@enderror
                 </div>
 
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-sm font-semibold text-gray-700">Spesifikasi Kamar</h3>
+            </div>
+            <div class="card-body grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="form-label">Jenis Kamar Mandi</label>
+                    <select required name="bathroom_type"
+                            class="form-select @error('bathroom_type') ring-1 ring-red-400 @enderror">
+                        <option value="" @selected(old('bathroom_type', $room->bathroom_type) === '')>Pilih jenis kamar mandi…</option>
+                        <option value="inside" @selected(old('bathroom_type', $room->bathroom_type) == 'inside')>Dalam</option>
+                        <option value="outside" @selected(old('bathroom_type', $room->bathroom_type) == 'outside')>Luar</option>
+                        <option value="shared" @selected(old('bathroom_type', $room->bathroom_type) == 'shared')>Bersama</option>
+                    </select>
+                    @error('bathroom_type')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label class="form-label">Furnished</label>
+                    <select required name="furnished"
+                            class="form-select @error('furnished') ring-1 ring-red-400 @enderror">
+                        <option value="" @selected(old('furnished', $room->furnished) === '')>Pilih furnished…</option>
+                        <option value="empty" @selected(old('furnished', $room->furnished) == 'empty')>Kosong</option>
+                        <option value="semi" @selected(old('furnished', $room->furnished) == 'semi')>Semi Furnished</option>
+                        <option value="full" @selected(old('furnished', $room->furnished) == 'full')>Full Furnished</option>
+                    </select>
+                    @error('furnished')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label class="form-label">Listrik</label>
+                    <select required name="electricity_type"
+                            class="form-select @error('electricity_type') ring-1 ring-red-400 @enderror">
+                        <option value="" @selected(old('electricity_type', $room->electricity_type) === '')>Pilih listrik…</option>
+                        <option value="included" @selected(old('electricity_type', $room->electricity_type) == 'included')>Termasuk</option>
+                        <option value="token" @selected(old('electricity_type', $room->electricity_type) == 'token')>Token</option>
+                        <option value="meter" @selected(old('electricity_type', $room->electricity_type) == 'meter')>Sesuai Pemakaian</option>
+                    </select>
+                    @error('electricity_type')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
+
+                <div>
+                    <label class="form-label">Air</label>
+                    <select required name="water_type"
+                            class="form-select @error('water_type') ring-1 ring-red-400 @enderror">
+                        <option value="" @selected(old('water_type', $room->water_type) === '')>Pilih air…</option>
+                        <option value="included" @selected(old('water_type', $room->water_type) == 'included')>Termasuk</option>
+                        <option value="meter" @selected(old('water_type', $room->water_type) == 'meter')>Meteran</option>
+                        <option value="well" @selected(old('water_type', $room->water_type) == 'well')>Sumur</option>
+                    </select>
+                    @error('water_type')<p class="form-error">{{ $message }}</p>@enderror
+                </div>
             </div>
         </div>
 
@@ -115,6 +278,7 @@ $existingFacilities = $room->facilities ?? [];
                     </label>
                     @endforeach
                 </div>
+                @error('facilities')<p class="form-error mt-2">{{ $message }}</p>@enderror
             </div>
         </div>
 
@@ -138,16 +302,11 @@ $existingFacilities = $room->facilities ?? [];
                              alt="Foto kamar"
                              class="w-full h-full object-cover rounded-lg">
                         {{-- Hapus foto individu --}}
-                        <form method="POST"
-                              action="{{ route('admin.rooms.images.destroy', $room) }}"
-                              onsubmit="return confirm('Hapus foto ini?')"
-                              class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            @csrf @method('DELETE')
-                            <input type="hidden" name="image" value="{{ $img }}">
-                            <button type="submit"
-                                    class="w-5 h-5 rounded-full bg-red-500 text-white text-xs
+                        <button type="submit"
+                                form="delete-image-{{ $loop->index }}"
+                                onclick="return confirm('Hapus foto ini?')"
+                                class="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity
                                            flex items-center justify-center shadow">×</button>
-                        </form>
                     </div>
                     @endforeach
                 </div>
@@ -156,7 +315,7 @@ $existingFacilities = $room->facilities ?? [];
         @endif
 
         {{-- Upload foto tambahan --}}
-        <div class="card" x-data="photoUpload()">
+        <div class="card" x-data="photoUpload({{ count($room->images ?? []) }})">
             <div class="card-header">
                 <h3 class="text-sm font-semibold text-gray-700">Tambah Foto</h3>
             </div>
@@ -202,30 +361,160 @@ $existingFacilities = $room->facilities ?? [];
 
 @push('scripts')
 <script>
-function photoUpload() {
+document.addEventListener('DOMContentLoaded', () => {
+    const length = document.querySelector('[name=length_m]');
+    const width  = document.querySelector('[name=width_m]');
+    const area   = document.getElementById('preview_area');
+    if (!length || !width || !area) {
+        return;
+    }
+
+    const roomNumber = document.querySelector('[name=room_number]');
+    const priceInput = document.getElementById('price');
+    const depositInput = document.querySelector('[name=deposit]');
+    const pricePreview = document.getElementById('price_preview');
+    const depositPreview = document.getElementById('deposit_preview');
+
+    function rupiah(v) {
+        if (v === '' || v === null) {
+            return '';
+        }
+        return 'Rp ' + Number(v).toLocaleString('id-ID');
+    }
+
+    function updateMoney() {
+        pricePreview.textContent = priceInput && priceInput.value
+            ? rupiah(priceInput.value) + ' / bulan'
+            : '';
+
+        depositPreview.textContent = depositInput && depositInput.value
+            ? 'Deposit : ' + rupiah(depositInput.value)
+            : '';
+    }
+
+    if (priceInput) {
+        priceInput.addEventListener('input', updateMoney);
+    }
+    if (depositInput) {
+        depositInput.addEventListener('input', updateMoney);
+    }
+
+    updateMoney();
+
+    if (roomNumber) {
+        roomNumber.value = roomNumber.value.toUpperCase();
+        roomNumber.addEventListener('input', function () {
+            this.value = this.value
+                .toUpperCase()
+                .replace(/\s+/g,'')
+                .replace(/[^A-Z0-9-]/g,'');
+        });
+    }
+    const hiddenArea = document.getElementById('size_sqm');
+    function calculateArea() {
+        const l = parseFloat(length.value) || 0;
+        const w = parseFloat(width.value) || 0;
+
+        if (l > 0 && w > 0) {
+            const total = (l * w).toFixed(2);
+
+            area.value = `${l} × ${w} = ${total} m²`;
+            hiddenArea.value = total;
+        } else {
+            area.value = '';
+            hiddenArea.value = '';
+        }
+    }
+
+    length.addEventListener('input', calculateArea);
+    width.addEventListener('input', calculateArea);
+    calculateArea();
+});
+
+function photoUpload(existingCount) {
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
     return {
         previews : [],
         fileList  : [],
-        pick(e) {
-            Array.from(e.target.files).forEach(f => {
-                if (this.fileList.length < 6) {
-                    this.previews.push(URL.createObjectURL(f));
-                    this.fileList.push(f);
-                }
-            });
-            this.syncInput();
+        cover: 0,
+        totalPhoto() {
+            return existingCount + this.fileList.length;
+        },
+        
+        addFile(file) {
+            if (this.totalPhoto() >= 6) {
+                alert('Maksimal 6 foto.');
+                return;
+            }
+
+            if (!allowed.includes(file.type)) {
+                alert('Format harus JPG, PNG atau WebP.');
+                return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Ukuran maksimal 2 MB.');
+                return;
+            }
+
+            const exists = this.fileList.some(f =>
+                f.name === file.name &&
+                f.size === file.size &&
+                f.lastModified === file.lastModified
+            );
+
+            if (exists) {
+                return;
+            }
+
+            this.fileList.push(file);
+            this.previews.push(URL.createObjectURL(file));
+
+            if (this.fileList.length === 1) {
+                this.cover = 0;
+            }
         },
         remove(i) {
             URL.revokeObjectURL(this.previews[i]);
             this.previews.splice(i, 1);
             this.fileList.splice(i, 1);
+
+            if (this.fileList.length === 0) {
+                this.cover = 0;
+            } else if (this.cover === i) {
+                this.cover = 0;
+            } else if (this.cover > i) {
+                this.cover--;
+            }
+
             this.syncInput();
+        },
+        pick(e) {
+            const files = Array.from(e.target.files);
+
+            if (this.totalPhoto() + files.length > 6) {
+                alert(`Maksimal 6 foto. Saat ini sudah ada ${existingCount} foto.`);
+                e.target.value = '';
+                return;
+            }
+
+            files.forEach(file => this.addFile(file));
+
+            this.syncInput();
+            e.target.value = '';
         },
         syncInput() {
             const dt = new DataTransfer();
             this.fileList.forEach(f => dt.items.add(f));
             this.$refs.input.files = dt.files;
         },
+        dropFiles(e) {
+            Array.from(e.dataTransfer.files).forEach(file => this.addFile(file));
+            this.syncInput();
+        },
+        destroy() {
+            this.previews.forEach(url => URL.revokeObjectURL(url));
+        }
     };
 }
 </script>

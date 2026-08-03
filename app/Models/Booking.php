@@ -98,7 +98,7 @@ class Booking extends Model
         };
     }
 
-    public function getStatusColorAttribute(): string
+    public function getStatusBadgeAttribute(): string
     {
         return match ($this->status) {
             'approved' => 'badge badge-green',

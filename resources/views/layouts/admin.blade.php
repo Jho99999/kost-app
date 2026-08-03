@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <title>@yield('title', 'Admin Kost')</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="h-full bg-gray-50 font-sans antialiased" x-data="{ sidebarOpen: false }">
@@ -22,7 +23,8 @@
 {{-- ── Sidebar ──────────────────────────────────────────────────────────── --}}
 <aside class="fixed inset-y-0 left-0 z-30 w-60 bg-slate-800 flex flex-col overflow-x-hidden
               transform transition-transform duration-200 ease-in-out
-              lg:translate-x-0">
+              lg:translate-x-0"
+       :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
   {{-- Logo --}}
   <div class="flex items-center gap-2.5 h-16 px-5 border-b border-slate-700 flex-shrink-0">
@@ -67,10 +69,22 @@
         'icon'   => 'M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z',
       ],
       [
+          'route' => 'admin.payment-methods.index',
+          'match' => 'admin.payment-methods.*',
+          'label' => 'Metode Pembayaran',
+          'icon'  => 'M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z',
+      ],
+      [
         'route'  => 'admin.complaints.index',
         'match'  => 'admin.complaints.*',
         'label'  => 'Aduan',
         'icon'   => 'M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z',
+      ],
+      [
+          'route' => 'admin.users.index',
+          'match' => 'admin.users.*',
+          'label' => 'Penyewa',
+          'icon'  => 'M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.964 0a9 9 0 1 0-11.964 0m11.964 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
       ],
       [
         'route'  => 'admin.checkouts.index',
@@ -141,7 +155,7 @@
   </header>
 
   {{-- Flash messages --}}
-  <div class="px-6 pt-4 space-y-3">
+  <div class="px-4 sm:px-6 pt-4 space-y-3">
     @foreach(['success' => 'alert-success', 'error' => 'alert-error', 'warning' => 'alert-warning', 'info' => 'alert-info'] as $type => $class)
       @if(session($type))
       <div x-data="{ show: true }" x-show="show" x-transition>
@@ -162,7 +176,7 @@
   </div>
 
   {{-- Konten halaman --}}
-  <main class="flex-1 px-6 py-6">
+  <main class="flex-1 px-4 py-5 sm:px-6 sm:py-6">
     @yield('content')
   </main>
 

@@ -119,6 +119,34 @@
             <dd class="font-medium text-gray-800">{{ $room->size_sqm }} m²</dd>
           </div>
           @endif
+          <div class="flex justify-between gap-4">
+            <dt class="text-gray-500">Nomor kamar</dt>
+            <dd class="font-medium text-right text-gray-800">{{ $room->room_number ?: '-' }}</dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt class="text-gray-500">Dimensi</dt>
+            <dd class="font-medium text-right text-gray-800">{{ $room->dimension }}</dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt class="text-gray-500">Kamar mandi</dt>
+            <dd class="font-medium text-right text-gray-800">{{ $room->bathroom_label }}</dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt class="text-gray-500">Furnished</dt>
+            <dd class="font-medium text-right text-gray-800">{{ $room->furnished_label }}</dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt class="text-gray-500">Listrik</dt>
+            <dd class="font-medium text-right text-gray-800">{{ $room->electricity_label }}</dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt class="text-gray-500">Air</dt>
+            <dd class="font-medium text-right text-gray-800">{{ $room->water_label }}</dd>
+          </div>
+          <div class="flex justify-between gap-4">
+            <dt class="text-gray-500">Deposit</dt>
+            <dd class="font-medium text-right text-gray-800">{{ $room->formatted_deposit }}</dd>
+          </div>
         </dl>
 
         <hr class="border-gray-100">
@@ -153,7 +181,7 @@
         @endif
 
         <a href="{{ route('rooms.index') }}"
-           class="block text-center text-sm text-gray-400 hover:text-gray-600 transition-colors">
+           class="back-link w-full justify-center">
           ← Lihat kamar lain
         </a>
 
