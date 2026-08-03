@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ config('app.name', 'Kost') }}</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script>
     (() => {
       const theme = localStorage.getItem('kost-theme') || 'light';
@@ -15,10 +17,16 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-slate-50 font-sans">
+
+  {{-- ── Header ──────────────────────────────────── --}}
   <header class="border-b border-gray-100 bg-white">
     <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
       <a href="{{ route('home') }}" class="flex items-center gap-2 font-bold text-blue-700">
-        <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white">K</span>
+        <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
+          </svg>
+        </div>
         {{ config('app.name', 'Kost') }}
       </a>
       <div class="flex items-center gap-2">
@@ -36,8 +44,10 @@
   </header>
 
   <main>
+    {{-- ── Hero ──────────────────────────────────── --}}
     <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
-      <div class="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+      <div class="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+
         <div>
           <p class="mb-4 text-sm font-semibold tracking-[0.2em] text-blue-600">MANAJEMEN KOST TERPADU</p>
           <h1 class="text-4xl font-black tracking-tight text-gray-900 sm:text-5xl">
@@ -68,48 +78,88 @@
           </div>
         </div>
 
-        <div class="card shadow-xl shadow-blue-100/50">
-          <div class="card-body grid gap-4 sm:grid-cols-2">
-            <div class="rounded-xl bg-slate-50 p-5">
-              <p class="font-semibold text-gray-900">Pemesanan kamar</p>
-              <p class="mt-2 text-sm leading-6 text-gray-600">Lihat detail kamar, spesifikasi, dan daftar kamar yang tersedia dengan cepat.</p>
+        {{-- Blue gradient panel — same visual language as the login page's left panel --}}
+        <div class="hidden lg:block bg-gradient-to-br from-blue-700 to-blue-900 rounded-3xl p-10 relative overflow-hidden shadow-xl">
+          <div class="absolute -top-20 -right-20 w-80 h-80 bg-blue-600/30 rounded-full"></div>
+          <div class="absolute -bottom-16 -left-16 w-64 h-64 bg-blue-800/40 rounded-full"></div>
+
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-8">
+              <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
+                </svg>
+              </div>
+              <span class="text-white font-bold text-xl">{{ config('app.name', 'Kost') }}</span>
             </div>
-            <div class="rounded-xl bg-slate-50 p-5">
-              <p class="font-semibold text-gray-900">Pembayaran jelas</p>
-              <p class="mt-2 text-sm leading-6 text-gray-600">Pilih metode pembayaran yang tersedia dan unggah bukti transaksi dengan mudah.</p>
-            </div>
-            <div class="rounded-xl bg-slate-50 p-5">
-              <p class="font-semibold text-gray-900">Status terkini</p>
-              <p class="mt-2 text-sm leading-6 text-gray-600">Pantau status pemesanan, tagihan, serta verifikasi pembayaran tanpa harus bertanya berulang kali.</p>
-            </div>
-            <div class="rounded-xl bg-slate-50 p-5">
-              <p class="font-semibold text-gray-900">Aduan terkelola</p>
-              <p class="mt-2 text-sm leading-6 text-gray-600">Penghuni bisa melaporkan kebutuhan atau masalah, dan admin bisa menindaklanjuti dengan lebih rapi.</p>
+
+            <h2 class="text-white text-2xl font-bold leading-snug mb-3">
+              Semua proses kost, dalam satu dashboard.
+            </h2>
+            <p class="text-blue-200 text-sm leading-relaxed">
+              Dari mencari kamar sampai memantau tagihan — tidak perlu chat bolak-balik dengan admin.
+            </p>
+
+            <div class="mt-8 space-y-4">
+              @foreach ([
+                'Pemesanan kamar online kapan saja',
+                'Riwayat pembayaran yang tercatat rapi',
+                'Notifikasi tagihan otomatis',
+                'Aduan penghuni langsung ke admin',
+              ] as $text)
+              <div class="flex items-center gap-3">
+                <svg class="w-5 h-5 text-blue-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                <span class="text-blue-100 text-sm">{{ $text }}</span>
+              </div>
+              @endforeach
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
+    {{-- ── Untuk siapa ─────────────────────────────── --}}
     <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
-      <div class="rounded-3xl bg-gradient-to-r from-blue-700 to-sky-600 p-8 text-white shadow-xl shadow-blue-200">
-        <div class="grid gap-6 md:grid-cols-3">
+      <div class="bg-gradient-to-br from-blue-700 to-blue-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-72 h-72 bg-blue-600/20 rounded-full"></div>
+        <div class="absolute -bottom-20 -left-10 w-56 h-56 bg-blue-800/30 rounded-full"></div>
+
+        <div class="relative grid gap-6 md:grid-cols-3">
           <div>
+            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm mb-3">
+              <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+              </svg>
+            </div>
             <h2 class="text-xl font-bold">Untuk penghuni</h2>
-            <p class="mt-2 text-sm leading-6 text-blue-50">Mencari kamar, mengajukan booking, mengelola tagihan, dan memantau status hunian dari satu tempat.</p>
+            <p class="mt-2 text-sm leading-6 text-blue-100">Mencari kamar, mengajukan booking, mengelola tagihan, dan memantau status hunian dari satu tempat.</p>
           </div>
           <div>
+            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm mb-3">
+              <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M9 8h6M5 21h14a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1Z" />
+              </svg>
+            </div>
             <h2 class="text-xl font-bold">Untuk admin</h2>
-            <p class="mt-2 text-sm leading-6 text-blue-50">Mengelola kamar, booking, pembayaran, dan aduan dengan lebih cepat dan terdokumentasi dengan baik.</p>
+            <p class="mt-2 text-sm leading-6 text-blue-100">Mengelola kamar, booking, pembayaran, dan aduan dengan lebih cepat dan terdokumentasi dengan baik.</p>
           </div>
           <div>
+            <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm mb-3">
+              <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+            </div>
             <h2 class="text-xl font-bold">Hasilnya</h2>
-            <p class="mt-2 text-sm leading-6 text-blue-50">Komunikasi lebih jelas, proses lebih tertata, dan pengalaman tinggal kost menjadi lebih profesional.</p>
+            <p class="mt-2 text-sm leading-6 text-blue-100">Komunikasi lebih jelas, proses lebih tertata, dan pengalaman tinggal kost menjadi lebih profesional.</p>
           </div>
         </div>
       </div>
     </section>
 
+    {{-- ── Fitur utama ─────────────────────────────── --}}
     <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
       <div class="mb-6">
         <p class="text-sm font-semibold text-blue-600">FITUR UTAMA</p>
@@ -117,55 +167,67 @@
       </div>
 
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div class="card h-full">
-          <div class="card-body">
-            <p class="font-semibold text-gray-900">Dashboard portal</p>
-            <p class="mt-2 text-sm text-gray-600">Tampilan ringkas yang memudahkan penghuni melihat status aktif, tagihan, dan jadwal pembayaran.</p>
-          </div>
-        </div>
+        @php
+          $features = [
+            ['title' => 'Dashboard portal', 'desc' => 'Tampilan ringkas yang memudahkan penghuni melihat status aktif, tagihan, dan jadwal pembayaran.',
+             'icon' => 'M3 13.5h4.5V21H3v-7.5Zm6.75-6H14.25V21H9.75V7.5ZM16.5 3H21v18h-4.5V3Z'],
+            ['title' => 'Manajemen kamar', 'desc' => 'Admin dapat menampilkan daftar kamar, detail spesifikasi, dan status ketersediaan dengan cepat.',
+             'icon' => 'M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75'],
+            ['title' => 'Pembayaran & bukti', 'desc' => 'Menyediakan alur pembayaran yang lebih rapi dengan status verifikasi yang tertata.',
+             'icon' => 'M2.25 8.25h19.5M2.25 8.25v10.5A1.5 1.5 0 0 0 3.75 20.25h16.5a1.5 1.5 0 0 0 1.5-1.5V8.25M2.25 8.25l1.5-3A1.5 1.5 0 0 1 5.16 4.5h13.68a1.5 1.5 0 0 1 1.41 1.5l1.5 3'],
+            ['title' => 'Aduan & komunikasi', 'desc' => 'Memungkinkan penghuni mengajukan kebutuhan atau masalah, sehingga proses follow-up jadi lebih mudah.',
+             'icon' => 'M8.25 10.5h7.5m-7.5 3h4.5m6-9H5.25a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h3v3.75l4.5-3.75h5.25a2.25 2.25 0 0 0 2.25-2.25v-9A2.25 2.25 0 0 0 18.75 4.5Z'],
+          ];
+        @endphp
 
+        @foreach($features as $f)
         <div class="card h-full">
           <div class="card-body">
-            <p class="font-semibold text-gray-900">Manajemen kamar</p>
-            <p class="mt-2 text-sm text-gray-600">Admin dapat menampilkan daftar kamar, detail spesifikasi, dan status ketersediaan dengan cepat.</p>
+            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-3">
+              <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="{{ $f['icon'] }}"/>
+              </svg>
+            </div>
+            <p class="font-semibold text-gray-900">{{ $f['title'] }}</p>
+            <p class="mt-2 text-sm text-gray-600">{{ $f['desc'] }}</p>
           </div>
         </div>
-
-        <div class="card h-full">
-          <div class="card-body">
-            <p class="font-semibold text-gray-900">Pembayaran & bukti</p>
-            <p class="mt-2 text-sm text-gray-600">Menyediakan alur pembayaran yang lebih rapi dengan status verifikasi yang tertata.</p>
-          </div>
-        </div>
-
-        <div class="card h-full">
-          <div class="card-body">
-            <p class="font-semibold text-gray-900">Aduan & komunikasi</p>
-            <p class="mt-2 text-sm text-gray-600">Memungkinkan penghuni mengajukan kebutuhan atau masalah, sehingga proses follow-up jadi lebih mudah.</p>
-          </div>
-        </div>
+        @endforeach
       </div>
     </section>
 
+    {{-- ── Kenapa cocok ─────────────────────────────── --}}
     <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
       <div class="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 class="text-2xl font-bold text-gray-900">Kenapa aplikasi ini cocok?</h2>
-          <ul class="mt-5 space-y-3 text-sm text-gray-600">
-            <li class="flex gap-3"><span class="mt-1 h-2.5 w-2.5 rounded-full bg-blue-600"></span>Desain responsif, cocok untuk desktop maupun smartphone.</li>
-            <li class="flex gap-3"><span class="mt-1 h-2.5 w-2.5 rounded-full bg-blue-600"></span>Proses sewa dan pembayaran lebih transparan untuk penghuni.</li>
-            <li class="flex gap-3"><span class="mt-1 h-2.5 w-2.5 rounded-full bg-blue-600"></span>Admin bisa mengelola operasional kost dengan workflow yang lebih rapi.</li>
-            <li class="flex gap-3"><span class="mt-1 h-2.5 w-2.5 rounded-full bg-blue-600"></span>Mudah dikembangkan untuk kebutuhan bisnis kost yang terus berkembang.</li>
+          <ul class="mt-5 space-y-4 text-sm text-gray-600">
+            @foreach ([
+              'Desain responsif, cocok untuk desktop maupun smartphone.',
+              'Proses sewa dan pembayaran lebih transparan untuk penghuni.',
+              'Admin bisa mengelola operasional kost dengan workflow yang lebih rapi.',
+              'Mudah dikembangkan untuk kebutuhan bisnis kost yang terus berkembang.',
+            ] as $point)
+            <li class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              {{ $point }}
+            </li>
+            @endforeach
           </ul>
         </div>
 
-        <div class="rounded-3xl bg-slate-900 p-8 text-white shadow-lg shadow-slate-300">
-          <p class="text-sm font-semibold text-sky-300">Satu aplikasi, banyak manfaat</p>
-          <h3 class="mt-2 text-2xl font-bold">Mulai kelola kost Anda dengan lebih profesional.</h3>
-          <p class="mt-3 text-sm leading-6 text-slate-300">Dari pencarian kamar sampai proses pembayaran dan pengelolaan aduan, semua tersentralisasi dan mudah dipantau.</p>
-          <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-            <a href="{{ route('register') }}" class="btn btn-primary">Daftar sekarang</a>
-            <a href="{{ route('login') }}" class="btn btn-secondary">Masuk ke dashboard</a>
+        <div class="bg-gradient-to-br from-blue-700 to-blue-900 rounded-3xl p-8 text-white shadow-lg relative overflow-hidden">
+          <div class="absolute -top-16 -right-16 w-56 h-56 bg-blue-600/25 rounded-full"></div>
+          <div class="relative">
+            <p class="text-sm font-semibold text-blue-200">Satu aplikasi, banyak manfaat</p>
+            <h3 class="mt-2 text-2xl font-bold">Mulai kelola kost Anda dengan lebih profesional.</h3>
+            <p class="mt-3 text-sm leading-6 text-blue-100">Dari pencarian kamar sampai proses pembayaran dan pengelolaan aduan, semua tersentralisasi dan mudah dipantau.</p>
+            <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+              <a href="{{ route('register') }}" class="btn btn-primary">Daftar sekarang</a>
+              <a href="{{ route('login') }}" class="rounded-lg border border-white/30 px-4 py-2 text-center font-medium text-white hover:bg-white/10">Masuk ke dashboard</a>
+            </div>
           </div>
         </div>
       </div>
@@ -177,5 +239,6 @@
       © {{ date('Y') }} {{ config('app.name', 'Kost') }}
     </div>
   </footer>
+
 </body>
 </html>
