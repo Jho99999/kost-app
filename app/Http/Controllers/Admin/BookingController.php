@@ -89,6 +89,7 @@ class BookingController extends Controller
      */
     private function approve(Booking $booking): void
     {
+        abort_if($booking->room->status !== 'available', 422, 'Kamar sudah tidak tersedia — pemesanan lain untuk kamar ini mungkin sudah disetujui.');
         DB::transaction(function () use ($booking) {
             // 1. Approve booking
             $booking->update([

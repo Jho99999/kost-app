@@ -75,9 +75,11 @@ class Booking extends Model
     }
 
     /** Tanggal estimasi akhir kontrak sewa */
-    public function getCheckOutDateAttribute(): \Carbon\Carbon
+    public function getCheckOutDateAttribute($value): \Carbon\Carbon
     {
-        return $this->check_in_date->copy()->addMonths($this->duration_months)->subDay();
+        return $value
+            ? \Carbon\Carbon::parse($value)
+            : $this->check_in_date->copy()->addMonths($this->duration_months)->subDay();
     }
 
     /** Total biaya sewa seluruh durasi */

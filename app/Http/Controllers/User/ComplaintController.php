@@ -38,6 +38,12 @@ class ComplaintController extends Controller
     /** Simpan aduan baru */
     public function store(Request $request): RedirectResponse
     {
+        $owns = auth()->user()->bookings()
+            ->whereIn('status', ['approved', 'active'])
+            ->where('room_id', $validated['room_id'])
+            ->exists();
+
+        abort_unless($owns, 403, 'Anda tidak terdaftar sebagai penghuni kamar ini.');
         $validated = $request->validate([
             'room_id'     => ['required', 'exists:rooms,id'],
             'title'       => ['required', 'string', 'max:255'],
