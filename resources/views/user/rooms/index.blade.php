@@ -131,12 +131,12 @@
                     </div>
                     @endif
 
-                    <div class="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between">
+                    <div class="mt-auto pt-3 border-t border-gray-50 flex items-center justify-between gap-3">
                         <div>
                             <p class="text-lg font-bold text-gray-900">{{ $room->formatted_price }}</p>
                             <p class="text-xs text-gray-400">/ bulan</p>
                         </div>
-                        <span class="text-sm text-blue-600 font-medium group-hover:underline">Lihat →</span>
+                        <span class="back-link btn-sm">Lihat →</span>
                     </div>
                 </div>
 

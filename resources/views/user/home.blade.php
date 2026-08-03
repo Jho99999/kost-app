@@ -22,7 +22,7 @@
     </svg>
     <div>
       <p class="font-medium">Anda memiliki {{ $overdueCount }} tagihan yang sudah jatuh tempo.</p>
-      <a href="{{ route('payments.index') }}" class="text-sm underline mt-0.5 inline-block">Lihat tagihan →</a>
+      <a href="{{ route('payments.index') }}" class="back-link mt-2">Lihat tagihan →</a>
     </div>
   </div>
   @endif
@@ -52,7 +52,7 @@
         </div>
       </div>
       <a href="{{ route('bookings.show', $activeBooking) }}"
-         class="mt-4 text-xs text-blue-600 hover:text-blue-700 font-medium inline-block">
+         class="back-link mt-4">
         Lihat detail pemesanan →
       </a>
     </div>
@@ -107,7 +107,7 @@
   <div class="flex items-center justify-between mb-4">
     <h2 class="text-base font-semibold text-gray-800">Kamar Tersedia</h2>
     <a href="{{ route('rooms.index') }}"
-       class="text-sm text-blue-600 hover:text-blue-700 font-medium">Lihat semua →</a>
+       class="back-link">Lihat semua →</a>
   </div>
 
   @if($availableRooms->isEmpty())
