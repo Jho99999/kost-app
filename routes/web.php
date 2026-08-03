@@ -23,7 +23,7 @@ Route::get('/', function () {
         return view('welcome');
     }
 
-    Auth::user()->isAdmin()
+    return Auth::user()->isAdmin()
         ? redirect()->route('admin.dashboard')
         : app(HomeController::class)->index();
 })->name('home');

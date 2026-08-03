@@ -82,7 +82,7 @@
             <div class="bg-white rounded-xl border border-gray-200 p-5">
                 <h2 class="text-sm font-semibold text-gray-800 mb-4">Data Diri</h2>
 
-                <form method="POST" action="{{ route('profile.update') }}" class="space-y-4">
+                <form method="POST" action="{{ route('profile.update') }}" class="space-y-6">
                     @csrf @method('PUT')
 
                     {{-- Nama --}}
@@ -153,16 +153,13 @@
                     <button type="submit" class="btn-primary">
                         Simpan Data Diri
                     </button>
-                </form>
+                
             </div>
 
             {{-- Form Ganti Password --}}
             <div class="bg-white rounded-xl border border-gray-200 p-5">
                 <h2 class="text-sm font-semibold text-gray-800 mb-1">Ganti Password</h2>
                 <p class="text-xs text-gray-400 mb-4">Kosongkan jika tidak ingin mengganti password.</p>
-
-                <form method="POST" action="{{ route('profile.update') }}" class="space-y-4">
-                    @csrf @method('PUT')
 
                     {{-- Password saat ini --}}
                     <div>

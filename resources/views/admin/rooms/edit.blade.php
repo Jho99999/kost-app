@@ -494,14 +494,14 @@ function photoUpload(existingCount) {
 
             if (this.totalPhoto() + files.length > 6) {
                 alert(`Maksimal 6 foto. Saat ini sudah ada ${existingCount} foto.`);
-                e.target.value = '';
+                
                 return;
             }
 
             files.forEach(file => this.addFile(file));
 
             this.syncInput();
-            e.target.value = '';
+           
         },
         syncInput() {
             const dt = new DataTransfer();
