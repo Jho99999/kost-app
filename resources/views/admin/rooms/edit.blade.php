@@ -243,7 +243,7 @@ $existingFacilities = $room->facilities ?? [];
                         <option value="" @selected(old('electricity_type', $room->electricity_type) === '')>Pilih listrik…</option>
                         <option value="included" @selected(old('electricity_type', $room->electricity_type) == 'included')>Termasuk</option>
                         <option value="token" @selected(old('electricity_type', $room->electricity_type) == 'token')>Token</option>
-                        <option value="meter" @selected(old('electricity_type', $room->electricity_type) == 'meter')>Sesuai Pemakaian</option>
+                        <option value="usage" @selected(old('electricity_type', $room->electricity_type) == 'usage')>Sesuai Pemakaian</option>
                     </select>
                     @error('electricity_type')<p class="form-error">{{ $message }}</p>@enderror
                 </div>

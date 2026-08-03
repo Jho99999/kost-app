@@ -6,6 +6,13 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Admin Kost')</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2">
+  <script>
+    (() => {
+      const theme = localStorage.getItem('kost-theme') || 'light';
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    })();
+  </script>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="h-full bg-gray-50 font-sans antialiased" x-data="{ sidebarOpen: false }">
@@ -86,12 +93,6 @@
           'label' => 'Penyewa',
           'icon'  => 'M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.964 0a9 9 0 1 0-11.964 0m11.964 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',
       ],
-      [
-        'route'  => 'admin.checkouts.index',
-        'match'  => 'admin.checkouts.*',
-        'label'  => 'Check-Out',
-        'icon'   => 'M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9',
-      ],
     ];
     @endphp
 
@@ -152,6 +153,14 @@
     <span class="text-xs text-gray-400 hidden sm:block">
       {{ now()->isoFormat('dddd, D MMMM Y') }}
     </span>
+    <button type="button" onclick="toggleTheme()" class="theme-toggle" aria-label="Ganti tema">
+      <svg class="h-4 w-4 dark:hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+      </svg>
+      <svg class="hidden h-4 w-4 dark:block" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m0 13.5V21m9-9h-2.25M5.25 12H3m12.95 6.95-1.6-1.6M9.65 9.65 8.05 8.05m7.9 0-1.6 1.6M9.65 14.35l-1.6 1.6M12 7.5A4.5 4.5 0 1 0 16.5 12 4.5 4.5 0 0 0 12 7.5Z" />
+      </svg>
+    </button>
   </header>
 
   {{-- Flash messages --}}

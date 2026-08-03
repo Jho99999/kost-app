@@ -121,7 +121,7 @@ class Room extends Model
         return match ($this->electricity_type) {
             'included' => 'Termasuk',
             'token' => 'Token',
-            'meter' => 'Sesuai Pemakaian',
+            'usage', 'meter' => 'Sesuai Pemakaian',
             default => '-',
         };
     }

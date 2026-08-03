@@ -1,0 +1,150 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Room;
+use Illuminate\Database\Seeder;
+
+class RoomSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $rooms = [
+            [
+                'name' => 'Kamar 101',
+                'room_number' => '101',
+                'type' => 'Standard',
+                'description' => 'Kamar Standard yang nyaman dan bersih untuk single room.',
+                'price' => 800000,
+                'deposit' => 800000,
+                'status' => 'available',
+                'floor' => 1,
+                'capacity' => 1,
+                'length_m' => 3,
+                'width_m' => 4,
+                'size_sqm' => 12,
+                'bathroom_type' => 'outside',
+                'furnished' => 'semi',
+                'electricity_type' => 'included',
+                'water_type' => 'included',
+                'facilities' => ['WiFi', 'Kipas Angin', 'Lemari'],
+                'images' => [],
+                'cover_image' => 0,
+            ],
+            [
+                'name' => 'Kamar 102',
+                'room_number' => '102',
+                'type' => 'Standard',
+                'description' => 'Kamar Standard dengan fasilitas dasar dan lokasi strategis.',
+                'price' => 800000,
+                'deposit' => 800000,
+                'status' => 'available',
+                'floor' => 1,
+                'capacity' => 1,
+                'length_m' => 3,
+                'width_m' => 4,
+                'size_sqm' => 12,
+                'bathroom_type' => 'outside',
+                'furnished' => 'semi',
+                'electricity_type' => 'included',
+                'water_type' => 'included',
+                'facilities' => ['WiFi', 'Kipas Angin', 'Lemari'],
+                'images' => [],
+                'cover_image' => 0,
+            ],
+            [
+                'name' => 'Kamar 103',
+                'room_number' => '103',
+                'type' => 'Standard',
+                'description' => 'Kamar Standard cocok untuk pekerja dan mahasiswa.',
+                'price' => 850000,
+                'deposit' => 850000,
+                'status' => 'available',
+                'floor' => 1,
+                'capacity' => 2,
+                'length_m' => 3.2,
+                'width_m' => 4.2,
+                'size_sqm' => 13.44,
+                'bathroom_type' => 'shared',
+                'furnished' => 'full',
+                'electricity_type' => 'usage',
+                'water_type' => 'meter',
+                'facilities' => ['WiFi', 'AC', 'Kasur', 'Lemari', 'Meja', 'Kursi'],
+                'images' => [],
+                'cover_image' => 0,
+            ],
+            [
+                'name' => 'Kamar 201',
+                'room_number' => '201',
+                'type' => 'Deluxe',
+                'description' => 'Kamar Deluxe dengan AC dan kamar mandi dalam.',
+                'price' => 1200000,
+                'deposit' => 1200000,
+                'status' => 'available',
+                'floor' => 2,
+                'capacity' => 2,
+                'length_m' => 4,
+                'width_m' => 5,
+                'size_sqm' => 20,
+                'bathroom_type' => 'inside',
+                'furnished' => 'full',
+                'electricity_type' => 'included',
+                'water_type' => 'meter',
+                'facilities' => ['WiFi', 'AC', 'Kasur', 'TV', 'Lemari', 'Shower', 'Water Heater'],
+                'images' => [],
+                'cover_image' => 0,
+            ],
+            [
+                'name' => 'Kamar 202',
+                'room_number' => '202',
+                'type' => 'Deluxe',
+                'description' => 'Kamar Deluxe dengan desain rapi dan nyaman untuk tinggal jangka panjang.',
+                'price' => 1250000,
+                'deposit' => 1250000,
+                'status' => 'occupied',
+                'floor' => 2,
+                'capacity' => 2,
+                'length_m' => 4,
+                'width_m' => 5,
+                'size_sqm' => 20,
+                'bathroom_type' => 'inside',
+                'furnished' => 'full',
+                'electricity_type' => 'included',
+                'water_type' => 'meter',
+                'facilities' => ['WiFi', 'AC', 'Kasur', 'TV', 'Lemari', 'Shower', 'Water Heater'],
+                'images' => [],
+                'cover_image' => 0,
+            ],
+            [
+                'name' => 'Kamar 301',
+                'room_number' => '301',
+                'type' => 'VIP',
+                'description' => 'Kamar VIP premium dengan fasilitas lengkap untuk penghuni yang membutuhkan kenyamanan ekstra.',
+                'price' => 1800000,
+                'deposit' => 1800000,
+                'status' => 'maintenance',
+                'floor' => 3,
+                'capacity' => 2,
+                'length_m' => 5,
+                'width_m' => 6,
+                'size_sqm' => 30,
+                'bathroom_type' => 'inside',
+                'furnished' => 'full',
+                'electricity_type' => 'usage',
+                'water_type' => 'meter',
+                'facilities' => ['WiFi', 'AC', 'TV', 'Kulkas', 'Lemari', 'Meja Kerja', 'Shower', 'Water Heater', 'CCTV'],
+                'images' => [],
+                'cover_image' => 0,
+            ],
+        ];
+
+        foreach ($rooms as $room) {
+            Room::updateOrCreate(
+                ['name' => $room['name']],
+                $room
+            );
+        }
+
+        $this->command->info('✔ Sample rooms seeded.');
+    }
+}

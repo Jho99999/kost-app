@@ -38,7 +38,7 @@ class StoreRoomRequest extends FormRequest
 
             'furnished'      => ['required','in:empty,semi,full'],
 
-            'electricity_type' => ['required','in:included,token,meter'],
+            'electricity_type' => ['required','in:included,token,usage'],
 
             'water_type'       => ['required','in:included,meter,well'],
 

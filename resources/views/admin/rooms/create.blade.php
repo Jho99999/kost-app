@@ -375,8 +375,8 @@ $facilities = [
                             Token
                         </option>
 
-                        <option value="meter"
-                            @selected(old('electricity_type') == 'meter')>
+                        <option value="usage"
+                            @selected(old('electricity_type') == 'usage')>
                             Sesuai Pemakaian
                         </option>
 

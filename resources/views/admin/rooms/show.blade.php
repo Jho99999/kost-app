@@ -15,7 +15,6 @@
         </svg>
         Kembali
     </a>
-    <a href="{{ route('admin.rooms.edit', $room) }}" class="btn btn-secondary btn-sm">Edit Kamar</a>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -240,14 +239,16 @@
         @endif
 
         {{-- Aksi --}}
-        <a href="{{ route('admin.rooms.edit', $room) }}"
-           class="btn btn-primary w-full text-center block">Edit Kamar</a>
+        <div class="space-y-2">
+            <a href="{{ route('admin.rooms.edit', $room) }}"
+               class="btn btn-primary w-full text-center block">Edit Kamar</a>
 
-        <form method="POST" action="{{ route('admin.rooms.destroy', $room) }}"
-              onsubmit="return confirm('Hapus kamar {{ addslashes($room->name) }}? Semua foto dan data terkait akan hilang.')">
-            @csrf @method('DELETE')
-            <button type="submit" class="btn btn-danger w-full">Hapus Kamar</button>
-        </form>
+            <form method="POST" action="{{ route('admin.rooms.destroy', $room) }}"
+                  onsubmit="return confirm('Hapus kamar {{ addslashes($room->name) }}? Semua foto dan data terkait akan hilang.')">
+                @csrf @method('DELETE')
+                <button type="submit" class="btn btn-danger w-full">Hapus Kamar</button>
+            </form>
+        </div>
 
     </div>
 </div>

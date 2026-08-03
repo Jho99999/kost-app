@@ -17,6 +17,16 @@ use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\RoomController as UserRoomController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    if (! auth()->check()) {
+        return view('welcome');
+    }
+
+    return auth()->user()->isAdmin()
+        ? redirect()->route('admin.dashboard')
+        : app(HomeController::class)->index();
+})->name('home');
+
 /*
 |--------------------------------------------------------------------------
 | Guest routes
@@ -47,8 +57,6 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::middleware('user.role')->group(function () {
-        Route::get('/', [HomeController::class, 'index'])->name('home');
-
         Route::get('rooms', [UserRoomController::class, 'index'])->name('rooms.index');
         Route::get('rooms/{room}', [UserRoomController::class, 'show'])->name('rooms.show');
 
