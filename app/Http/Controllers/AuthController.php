@@ -148,8 +148,6 @@ class AuthController extends Controller
 
         ]);
 
-        
-
         return back()->with(
             'success',
             'Link reset password telah dikirim ke email Anda.'
