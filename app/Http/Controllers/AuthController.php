@@ -148,14 +148,7 @@ class AuthController extends Controller
 
         ]);
 
-        if (! $response->successful()) {
-
-            dd(
-                $response->status(),
-                $response->body()
-            );
-
-        }
+        
 
         return back()->with(
             'success',
