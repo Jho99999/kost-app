@@ -23,7 +23,7 @@ class StoreRoomRequest extends FormRequest
             'description'    => ['nullable','string','max:2000'],
 
             'price'          => ['required','numeric','min:1'],
-            'deposit'        => ['nullable','numeric','min:0'],
+            'deposit'        => ['required','numeric','min:0'],
 
             'status'         => ['required','in:available,occupied,maintenance'],
 
@@ -76,7 +76,7 @@ class StoreRoomRequest extends FormRequest
             'room_number.unique'   => 'Nomor kamar sudah digunakan.',
 
             'deposit.numeric'      => 'Deposit harus berupa angka.',
-
+            'deposit.required'     => 'Deposit wajib diisi.',
             'length_m.numeric'     => 'Panjang kamar harus berupa angka.',
             'width_m.numeric'      => 'Lebar kamar harus berupa angka.',
             'bathroom_type.in'     => 'Jenis kamar mandi tidak valid.',
